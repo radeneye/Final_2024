@@ -313,3 +313,14 @@ The odds ratio offers an estimate of the vaccine’s effectiveness. For this gro
 
 
 # Overall Results and Conclusions
+The COVID-19 vaccine proved effective in protecting men from contracting the virus. Although the confidence interval was somewhat narrower compared to other groups,ranging from 54.7% to 72.3%, the vaccine still demonstrated reliable effectiveness. The measured effectiveness for men was r effectivenessguy.
+
+The vaccine was highly successful in preventing COVID-19 among women, showing strong protection. The effectiveness rate for women was r effectivenessgal.
+
+Among individuals who identified as gay, the vaccine offered the highest level of protection. Their confidence interval ranged from 71.4% to 86.7%, indicating substantial effectiveness. The effectiveness for this group was r effectivenessgays.
+
+In contrast, the vaccine was not effective for individuals who reported drug use. Their confidence interval ranged from 2.02% to 23.1%, suggesting not only poor protection but a potentially increased risk. Drug users who received the vaccine were approximately 11 times more likely to contract COVID-19 than those in the placebo group. The effectiveness rate for drug users was r effectivenessdrug.
+
+Based on these findings, the vaccine is not recommended for individuals who use drugs. However, it is recommended for males, females, and those who identify as gay, as it has shown to be effective in these populations.
+
+Therefore, we reject the null hypothesis (that there is no difference in outcomes between vaccinated and unvaccinated individuals) for men, women, and gay individuals in favor of the alternative hypothesis, which supports the vaccine's effectiveness. For drug users, however, we fail to reject the null hypothesis, as the data does not support the vaccine’s protective benefit in this group.
