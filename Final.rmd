@@ -80,7 +80,7 @@ chisqtestGC(table1)
 guysfish <- fisher.test(table1)
 guysfish
 ```
-The key point to focus on is the output from Fisher’s Exact Test. The reported p-value is extremely small, 0.00000000000000022, indicating that the observed results are highly unlikely to have occurred by chance.
+The key point to focus on is the output from Fisher’s Exact Test. The reported p-value is extremely small, 0.0000000000000002, indicating that the observed results are highly unlikely to have occurred by chance.
 
 The null hypothesis states that COVID-related deaths are independent of sex. However, the data strongly suggests otherwise, supporting the alternative hypothesis: that there is a significant association between sex and COVID-19 death rates.
 
@@ -149,7 +149,7 @@ chisqtestGC(table1)
 galsfish <- fisher.test(table1)
 galsfish
 ```
-The key result to focus on is the output of Fisher’s Exact Test. The p-value shown above is extremely small, 0.00000002, indicating that these results are highly unlikely to have occurred by chance. Therefore, we can reject the null hypothesis in favor of the alternative.
+The key result to focus on is the output of Fisher’s Exact Test. The p-value shown above is extremely small, 0.00000001, indicating that these results are highly unlikely to have occurred by chance. Therefore, we can reject the null hypothesis in favor of the alternative.
 
 Fisher’s Exact Test also shows an odds ratio of 1.9. Women who received the vaccine were about 1.9 times as likely to contract COVID-19 compared to those who received the placebo.
 
@@ -175,6 +175,71 @@ The odds ratio provides an estimate of the vaccine’s effectiveness. For female
 
 
 ## LGBTQ
+
+### Barplot (LGBTQ)
+
+```{r}
+dd2 <- gay %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+```
+
+# the group_by followed by summarize(count=n())
+```{r}
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+```
+
+## Percentage Plot (LGBTQ)
+```{r}
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+This plot illustrates the COVID-19 infection outcomes among individuals who identify as gay, comparing those who received the vaccine with those who received a placebo.
+
+According to the barplot, approximately 20% of vaccinated individuals contracted COVID-19, while about 80% of those who received the placebo became infected. This suggests that individuals in this group who were vaccinated were about 16 times less likely to get COVID-19 than those who were given the placebo. The odds of contracting the virus while vaccinated are roughly 1 in 4.5.
+
+There are two plots displayed. In the first plot, the x-axis indicates whether participants were infected or not, and the y-axis shows the number of individuals in each category. In the second plot above, the x-axis still reflects infection status, but the y-axis now represents the percentage of individuals who got COVID-19 after receiving either the placebo or the vaccine. The two bars on the left highlight the infected portion of each group.
+
+The plots are generated using code that begins with the object named dd2, which is visible in the environment pane and includes four variables: infected, treatment, count, and percent. The second code block, labeled basicC, also appears in the environment and contains nine variables that contribute to generating the first plot. The final code block, basicCC, contains another set of nine variables and is used to create the second plot—the one based on percentages.
+
+### Numerical Results (LGBTQ)
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=gay)
+rowPerc(table1)
+colPerc(table1)
+```
+These numerical results highlight the percentage of gay individuals who contracted COVID-19 after receiving either the vaccine or the placebo. Among those who were vaccinated, 20% became infected, while 80% of those who received the placebo contracted the virus. These findings indicate that the vaccine was highly effective in protecting individuals in the gay community against COVID-19.
+
+The odds of contracting COVID-19 while vaccinated were approximately 1 in 4.5, meaning vaccinated individuals in this group were significantly less likely to become infected compared to those who received the placebo.
+
+## Inferential Results (LGBTQ)
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+gaysfish <- fisher.test(table1)
+gaysfish
+```
+The p-value is 0.0000007, an extremely small number, indicating that these results are highly unlikely to have occurred by chance.
+
+Fisher’s Exact Test shows an odds ratio of 4.3, meaning that gay individuals who received the vaccine were approximately 77% less likely, or only 0.23 times as likely, to contract COVID-19 compared to those who received the placebo.
+
+Given this evidence, we reject the null hypothesis in favor of the alternative. The vaccine appears to be highly effective in reducing the likelihood of COVID-19 infection among individuals who identify as gay.
+
+## Effectiveness Confidence Interval (LGBTQ)
+```{r}
+effect <- gaysfish$p.value/(gaysfish$p.value +1)
+effectivenessgays = gaysfish$estimate/(gaysfish$estimate +1)*100
+print(effectivenessgays)
+```
+```{r}
+low=(gaysfish$conf.int[1]/(gaysfish$conf.int[1] +1))*100
+hi=(gaysfish$conf.int[2]/(gaysfish$conf.int[2] +1))*100
+options(digits=2)
+```
+
+The graph above shows the effectiveness of the COVID-19 vaccine among individuals who identify as gay. An effectiveness rate above 50% indicates that the vaccine is considered effective. Based on the confidence interval displayed, we can conclude that the vaccine offers strong protection for this group against contracting COVID-19.
+
+The odds ratio, which provides a measure of the vaccine’s effectiveness, is shown above as 81, indicating a substantial level of protection. This suggests that vaccinated individuals are significantly better protected compared to those who did not receive the vaccine. The confidence interval for vaccine effectiveness in this group ranges from 71.4% to 86.7%.
 
 
 
