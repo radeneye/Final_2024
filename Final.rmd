@@ -18,13 +18,77 @@ FinalDat <-read.csv(file="finalSumr2024.csv",header=TRUE)
 FinalData <- FinalDat  %>% select(-one_of("X"))
 FinalData <- FinalData %>%
 mutate(across(where(is.character), as.factor))
+FinalData$treatment <- relevel(FinalData$treatment,ref="placebo")
+#FinalData$infected <- relevel(FinalData$infected,ref="OK")
+guy = filter(FinalData, sex =="M")
+gal = filter(FinalData, sex =="F")
+gay = filter(FinalData, LGBTQ =="gay")
+Druguser = filter(FinalData, DrugUser =="yes")
 ```
+
 
 # Introduction
 
 A new  preventative vaccine (covid921) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
 
 ## Males
+
+## Barplot (Men)
+```{r}
+dd2 <- guy %>%
+  group_by(infected, treatment) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  group_by(infected) %>%
+  mutate(prcnt = count / sum(count))
+```
+
+# the group_by followed by summarize(count=n())
+```{r}
+basicC <- ggplot(dd2, aes(x = infected, y = count, fill = treatment))
+print(basicC + geom_bar(stat = "identity", position = "dodge"))
+```
+
+## Percentage Plot (Men)
+```{r}
+basicCC <- ggplot(dd2, aes(x=infected, y=prcnt*100, fill=treatment))
+print(basicCC + geom_bar(stat = "identity", position = "dodge"))
+```
+
+These plots display the population of male participants in the clinical trial and how their likelihood of contracting COVID-19 varied depending on whether they received the vaccine or a placebo.
+
+The first plot shows that 74% of participants who received the placebo contracted COVID-19, while only about 26% of vaccinated participants did. This indicates a significantly higher infection rate in the placebo group, suggesting the vaccine is effective in reducing the risk of COVID-19 infection. Based on the data, the odds of contracting COVID-19 after vaccination are approximately 1 in 3 compared to those who received the placebo.
+
+In the first plot, the x-axis shows whether participants were infected or not, and the y-axis shows the total count of individuals in each category.
+
+In the second plot, the x-axis still represents COVID-19 infection status, but the y-axis now represents the percentage of individuals who contracted the virus, categorized by whether they received the vaccine or the placebo. The two left bars represent all the individuals who got infected.
+
+The data used to create these plots come from different objects in the environment pane. The object dd2 contains four variables: infected, treatment, count, and prcent (short for "percent"). This dataset contributes to the second, percentage-based plot. The basicC object includes nine variables and is used to create the first plot. Another object, basicCC, also contains nine variables and contributes to generating the second plot as well.
+
+### Numerical results (Men)
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=guy)
+rowPerc(table1)
+colPerc(table1)
+```
+These numerical results highlight the specific percentages of male participants who contracted COVID-19 based on whether they received the vaccine or the placebo. About 26% of those who were vaccinated became infected, compared to approximately 74% of those who received the placebo. This demonstrates that the vaccine is highly effective in preventing COVID-19 amongst men.
+
+### Inferential results (Men)
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+guysfish <- fisher.test(table1)
+guysfish
+```
+The key point to focus on is the output from Fisher’s Exact Test. The reported p-value is extremely small, 0.00000000000000022, indicating that the observed results are highly unlikely to have occurred by chance.
+
+The null hypothesis states that COVID-related deaths are independent of sex. However, the data strongly suggests otherwise, supporting the alternative hypothesis: that there is a significant association between sex and COVID-19 death rates.
+
+Additionally, the odds ratio is 2.82, meaning that individuals in the placebo group were about 2.8 times more likely to contract COVID-19 compared to those who received the vaccine.
+
+
+
+
 
 
 ## Females
