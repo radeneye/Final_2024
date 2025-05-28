@@ -40,16 +40,14 @@ dd2 <- guy %>%
   summarize(count = n(), .groups = "drop") %>%
   group_by(infected) %>%
   mutate(prcnt = count / sum(count))
-```
 
 # the group_by followed by summarize(count=n())
-```{r}
+
 basicC <- ggplot(dd2, aes(x = infected, y = count, fill = treatment))
 print(basicC + geom_bar(stat = "identity", position = "dodge"))
-```
 
-## Percentage Plot (Men)
-```{r}
+# Now for percentage plot
+
 basicCC <- ggplot(dd2, aes(x=infected, y=prcnt*100, fill=treatment))
 print(basicCC + geom_bar(stat = "identity", position = "dodge"))
 ```
@@ -110,18 +108,17 @@ The odds ratio provides an estimate of how effective the vaccine is. For males, 
 ## Barplot (Women)
 ```{r}
 dd2 <- gal %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
-```
+
 
 # the group_by followed by summarize(count=n())
-```{r}
-basicC <- ggplot(dd2,aes(x = infected,y = count,fill = treatment))
-basicC + geom_bar(stat = "identity", position = "dodge")
-```
 
-## Percentage Plot (Women)
-```{r}
-basicCC <- ggplot(dd2,aes(x = infected,y = prcnt*100,fill = treatment)) 
-basicCC + geom_bar(stat = "identity", position = "dodge")
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
 ```
 This plot compares COVID-19 infection outcomes among female participants who received either the vaccine or the placebo.
 
@@ -177,19 +174,19 @@ The odds ratio provides an estimate of the vaccine’s effectiveness. For female
 ## LGBTQ
 
 ### Barplot (LGBTQ)
+### Barplot
 
 ```{r}
 dd2 <- gay %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
-```
+
 
 # the group_by followed by summarize(count=n())
-```{r}
+
 basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
 basicC + geom_bar(stat="identity",position="dodge")
-```
 
-## Percentage Plot (LGBTQ)
-```{r}
+#Now for percentage plot
+
 basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
 basicCC + geom_bar(stat="identity", position = "dodge")
 ```
@@ -244,6 +241,22 @@ The odds ratio, which provides a measure of the vaccine’s effectiveness, is sh
 
 
 ## Druggies
+
+### Barplot (Druggies)
+```{r}
+dd2 <-  Druguser %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
 
 
 # Overall Results and Conclusions
