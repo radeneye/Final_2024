@@ -51,12 +51,12 @@ print(basicC + geom_bar(stat = "identity", position = "dodge"))
 ## Percentage Plot (Men)
 ```{r}
 basicCC <- ggplot(dd2, aes(x=infected, y=prcnt*100, fill=treatment))
-print(basicCC + geom_bar(stat = "identity", position = "dodge"))
+basicCC + geom_bar(stat = "identity", position = "dodge")
 ```
 
 These plots display the population of male participants in the clinical trial and how their likelihood of contracting COVID-19 varied depending on whether they received the vaccine or a placebo.
 
-The first plot shows that 74% of participants who received the placebo contracted COVID-19, while only about 26% of vaccinated participants did. This indicates a significantly higher infection rate in the placebo group, suggesting the vaccine is effective in reducing the risk of COVID-19 infection. Based on the data, the odds of contracting COVID-19 after vaccination are approximately 1 in 3 compared to those who received the placebo.
+The first plot shows that about 74% of participants who received the placebo contracted COVID-19, while only about 26% of vaccinated participants did. This indicates a significantly higher infection rate in the placebo group, suggesting the vaccine is effective in reducing the risk of COVID-19 infection. Based on the data, the odds of contracting COVID-19 after vaccination are approximately 1 in 3 compared to those who received the placebo.
 
 In the first plot, the x-axis shows whether participants were infected or not, and the y-axis shows the total count of individuals in each category.
 
@@ -84,7 +84,7 @@ The key point to focus on is the output from Fisher’s Exact Test. The reported
 
 The null hypothesis states that COVID-related deaths are independent of sex. However, the data strongly suggests otherwise, supporting the alternative hypothesis: that there is a significant association between sex and COVID-19 death rates.
 
-Additionally, the odds ratio is 2.82, meaning that individuals in the placebo group were about 2.8 times more likely to contract COVID-19 compared to those who received the vaccine.
+Additionally, the odds ratio is about 2.82, meaning that individuals in the placebo group were about 2.82 times more likely to contract COVID-19 compared to those who received the vaccine.
 
 ## Effectiveness Confidence Interval (Men)
 
@@ -106,8 +106,73 @@ The odds ratio provides an estimate of how effective the vaccine is. For males, 
 
 
 
-
 ## Females
+
+## Barplot (Women)
+```{r}
+dd2 <- gal %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+```
+
+# the group_by followed by summarize(count=n())
+```{r}
+basicC <- ggplot(dd2,aes(x = infected,y = count,fill = treatment))
+basicC + geom_bar(stat = "identity", position = "dodge")
+```
+
+## Percentage Plot (Women)
+```{r}
+basicCC <- ggplot(dd2,aes(x = infected,y = prcnt*100,fill = treatment)) 
+basicCC + geom_bar(stat = "identity", position = "dodge")
+```
+This plot compares COVID-19 infection outcomes among female participants who received either the vaccine or the placebo.
+
+Similar to the previous plot, about 65% of the females who received the placebo contracted COVID-19, which is a notably high rate. This means that roughly 65% of the infected individuals were in the placebo group. The odds of contracting COVID-19 while on the placebo were 2.8 times higher, compared to about 1.02 times for those who received the vaccine. In other words, women who were vaccinated were less likely to become infected than those who took the placebo.
+
+There are two plots shown. In the first plot, the x-axis indicates whether participants were infected with COVID-19 or not, while the y-axis shows the count of individuals in each category.
+
+In the second plot, the two leftmost bars represent all participants who contracted COVID-19. The x-axis again shows infection status, but the y-axis now reflects the percentage of people infected, grouped by whether they took the vaccine or the placebo.
+
+The code used to generate these plots starts with the block labeled dd2, visible in the environment pane. This dataset contains four variables: infected, treatment, count, and percent. Another code group, basicC, also in the environment pane, contains nine variables and is used to create the first plot. Finally, basicCC, found in the files pane with nine variables, helps produce the second, percentage-based plot.
+
+## Numerical Results (Women)
+```{r}
+table1 <- xtabs(~infected + treatment, data=gal)
+rowPerc(table1)
+colPerc(table1)
+```
+These numerical results reveal the specific percentages of women who contracted COVID-19 after receiving either the placebo or the vaccine. About 35% of the women who were vaccinated became infected, consistent with the earlier plots. In contrast, 65% of the women who received the placebo contracted COVID-19. This clearly shows that the vaccine is effective in protecting women from the virus. Women who were vaccinated were significantly less likely to contract COVID-19 compared to those who took the placebo.
+
+
+## Inferential Results (Women)
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+galsfish <- fisher.test(table1)
+galsfish
+```
+The key result to focus on is the output of Fisher’s Exact Test. The p-value shown above is extremely small, 0.00000002, indicating that these results are highly unlikely to have occurred by chance. Therefore, we can reject the null hypothesis in favor of the alternative.
+
+Fisher’s Exact Test also shows an odds ratio of 1.9. Women who received the vaccine were about 1.9 times as likely to contract COVID-19 compared to those who received the placebo.
+
+## Effectiveness Confidence Interval (Women)
+```{r}
+effect <- galsfish$p.value/(galsfish$p.value +1)
+effectivenessgal = galsfish$estimate/(galsfish$estimate +1)*100
+print(effectivenessgal)
+```
+
+```{r}
+low=(galsfish$conf.int[1]/(galsfish$conf.int[1] +1))*100
+hi=(galsfish$conf.int[2]/(galsfish$conf.int[2] +1))*100
+options(digits=2)
+```
+The chart above shows the effectiveness of the COVID-19 vaccine in females. An effectiveness rate above 50% indicates that the vaccine is effective. Based on the confidence interval displayed, we can conclude that the vaccine is highly effective in protecting women from contracting COVID-19.
+
+Generally, a vaccine is considered effective if its effectiveness is 60% or higher. This vaccine performs exceptionally well in preventing COVID-19 infections among women.
+
+The odds ratio provides an estimate of the vaccine’s effectiveness. For females, the odds ratio is approximately 65, with a confidence interval ranging from 68.75 to 78.26, further confirming the vaccine’s strong protective effect.
+
+
 
 
 ## LGBTQ
