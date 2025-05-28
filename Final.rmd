@@ -51,7 +51,7 @@ print(basicC + geom_bar(stat = "identity", position = "dodge"))
 ## Percentage Plot (Men)
 ```{r}
 basicCC <- ggplot(dd2, aes(x=infected, y=prcnt*100, fill=treatment))
-basicCC + geom_bar(stat = "identity", position = "dodge")
+print(basicCC + geom_bar(stat = "identity", position = "dodge"))
 ```
 
 These plots display the population of male participants in the clinical trial and how their likelihood of contracting COVID-19 varied depending on whether they received the vaccine or a placebo.
@@ -93,7 +93,6 @@ effect <- guysfish$p.value/(guysfish$p.value +1)
 effectivenessguy = guysfish$estimate/(guysfish$estimate +1)*100
 print(effectivenessguy)
 ```
-
 ```{r}
 low=(guysfish$conf.int[1]/(guysfish$conf.int[1] +1))*100
 hi=(guysfish$conf.int[2]/(guysfish$conf.int[2] +1))*100
