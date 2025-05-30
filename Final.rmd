@@ -31,6 +31,9 @@ Druguser = filter(FinalData, DrugUser =="yes")
 
 A new  preventative vaccine (covid921) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
 
+## Overall Approach
+The data set contains clinical trial data on the effectiveness of the new Covid921 vaccine across various subpopulations, including queer individuals, men, women, and drug users. Each participant is categorized by treatment group (vaccine or placebo), infection outcome (infected or not), gender, sexual orientation, and drug use status. To evaluate vaccine effectiveness, we will take a three-part approach: graphically, we’ll use bar charts to visualize infection rates within and across subgroups; numerically, we’ll calculate infection proportions, odds ratios, and confidence intervals for each group; and inferentially, we’ll perform chi-square tests, Fisher’s exact tests, and logistic regression to assess whether differences in infection rates are statistically significant. This comprehensive analysis will help determine if the vaccine performs equally well across all subgroups or if there are notable disparities in its protective effect.
+
 ## Males
 
 ## Barplot (Men)
@@ -78,13 +81,12 @@ chisqtestGC(table1)
 guysfish <- fisher.test(table1)
 guysfish
 ```
+
 The key point to focus on is the output from Fisher’s Exact Test. The reported p-value is extremely small, 0.0000000000000002, indicating that the observed results are highly unlikely to have occurred by chance.
 
 The null hypothesis states that COVID-related deaths are independent of sex. However, the data strongly suggests otherwise, supporting the alternative hypothesis: that there is a significant association between sex and COVID-19 death rates.
 
-Additionally, the odds ratio is about 2.82, meaning that individuals in the placebo group were about 2.82 times more likely to contract COVID-19 compared to those who received the vaccine.
-
-## Effectiveness Confidence Interval (Men)
+Additionally, the odds ratio is about 2.82, meaning that the men in the placebo group were about 2.82 times more likely to contract COVID-19 compared to those who received the vaccine.
 
 ```{r}
 effect <- guysfish$p.value/(guysfish$p.value +1)
@@ -97,9 +99,11 @@ hi=(guysfish$conf.int[2]/(guysfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
+## Effectiveness Confidence Interval `r low` to `r hi` (Men)
+
 We can see above the effectiveness of the COVID-19 vaccine in male participants. An effectiveness rate above 50% indicates that the vaccine offers protection. Based on the confidence interval displayed, we can conclude that the vaccine is effective in reducing the risk of infection among men.
 
-The odds ratio provides an estimate of how effective the vaccine is. For males, the odds ratio is approximately 74, with a confidence interval ranging from 54.73 to 72.32, further supporting the vaccine’s strong protective effect.
+The odds ratio provides an estimate of how effective the vaccine is. For males, the odds ratio is approximately 74, with a confidence interval ranging from 68.85 to 78.32, further supporting the vaccine’s strong protective effect.
 
 
 
@@ -122,7 +126,7 @@ basicCC + geom_bar(stat="identity", position = "dodge")
 ```
 This plot compares COVID-19 infection outcomes among female participants who received either the vaccine or the placebo.
 
-Similar to the previous plot, about 65% of the females who received the placebo contracted COVID-19, which is a notably high rate. This means that roughly 65% of the infected individuals were in the placebo group. The odds of contracting COVID-19 while on the placebo were 2.8 times higher, compared to about 1.02 times for those who received the vaccine. In other words, women who were vaccinated were less likely to become infected than those who took the placebo.
+Similar to the previous plot, about 65% of the females who received the placebo contracted COVID-19, which is a notably high rate. This means that roughly 65% of the infected individuals were in the placebo group. Women who were vaccinated were less likely to become infected than those who took the placebo.
 
 There are two plots shown. In the first plot, the x-axis indicates whether participants were infected with COVID-19 or not, while the y-axis shows the count of individuals in each category.
 
@@ -148,9 +152,8 @@ galsfish
 ```
 The key result to focus on is the output of Fisher’s Exact Test. The p-value shown above is extremely small, 0.00000001, indicating that these results are highly unlikely to have occurred by chance. Therefore, we can reject the null hypothesis in favor of the alternative.
 
-Fisher’s Exact Test also shows an odds ratio of 1.9. Women who received the vaccine were about 1.9 times as likely to contract COVID-19 compared to those who received the placebo.
+Fisher’s Exact Test also shows an odds ratio of 1.9. Women in the placebo group were 2.82 times more likely to contract COVID-19 than women who received the vaccine.
 
-## Effectiveness Confidence Interval (Women)
 ```{r}
 effect <- galsfish$p.value/(galsfish$p.value +1)
 effectivenessgal = galsfish$estimate/(galsfish$estimate +1)*100
@@ -162,11 +165,12 @@ low=(galsfish$conf.int[1]/(galsfish$conf.int[1] +1))*100
 hi=(galsfish$conf.int[2]/(galsfish$conf.int[2] +1))*100
 options(digits=2)
 ```
-The chart above shows the effectiveness of the COVID-19 vaccine in females. An effectiveness rate above 50% indicates that the vaccine is effective. Based on the confidence interval displayed, we can conclude that the vaccine is highly effective in protecting women from contracting COVID-19.
 
-Generally, a vaccine is considered effective if its effectiveness is 60% or higher. This vaccine performs exceptionally well in preventing COVID-19 infections among women.
+## Effectiveness Confidence Interval `r low` to `r hi` (Women)
 
-The odds ratio provides an estimate of the vaccine’s effectiveness. For females, the odds ratio is approximately 65, with a confidence interval ranging from 68.75 to 78.26, further confirming the vaccine’s strong protective effect.
+The chart above shows the effectiveness of the COVID-19 vaccine in females. An effectiveness rate above 50% indicates that the vaccine is effective. Based on the confidence interval displayed, we can conclude that the vaccine is highly effective in protecting women from contracting COVID-19. This vaccine performs exceptionally well in preventing COVID-19 infections among women.
+
+The odds ratio provides an estimate of the vaccine’s effectiveness. For females, the odds ratio is approximately 65, with a confidence interval ranging from 59.8 to 69.92, further confirming the vaccine’s strong protective effect.
 
 
 
@@ -174,7 +178,6 @@ The odds ratio provides an estimate of the vaccine’s effectiveness. For female
 ## LGBTQ
 
 ### Barplot (LGBTQ)
-### Barplot
 
 ```{r}
 dd2 <- gay %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
@@ -192,7 +195,7 @@ basicCC + geom_bar(stat="identity", position = "dodge")
 ```
 This plot illustrates the COVID-19 infection outcomes among individuals who identify as gay, comparing those who received the vaccine with those who received a placebo.
 
-According to the barplot, approximately 20% of vaccinated individuals contracted COVID-19, while about 80% of those who received the placebo became infected. This suggests that individuals in this group who were vaccinated were about 16 times less likely to get COVID-19 than those who were given the placebo. The odds of contracting the virus while vaccinated are roughly 1 in 4.5.
+According to the barplot, approximately 20% of vaccinated individuals contracted COVID-19, while about 80% of those who received the placebo became infected. This suggests that individuals in this group who were vaccinated were less likely to get COVID-19 than those who were given the placebo. The odds of contracting the virus while vaccinated are roughly 1 in 4.5.
 
 There are two plots displayed. In the first plot, the x-axis indicates whether participants were infected or not, and the y-axis shows the number of individuals in each category. In the second plot above, the x-axis still reflects infection status, but the y-axis now represents the percentage of individuals who got COVID-19 after receiving either the placebo or the vaccine. The two bars on the left highlight the infected portion of each group.
 
@@ -218,11 +221,11 @@ gaysfish
 ```
 The p-value is 0.0000007, an extremely small number, indicating that these results are highly unlikely to have occurred by chance.
 
-Fisher’s Exact Test shows an odds ratio of 4.3, meaning that gay individuals who received the vaccine were approximately 77% less likely, or only 0.23 times as likely, to contract COVID-19 compared to those who received the placebo.
+Fisher’s Exact Test shows an odds ratio of 4.3, meaning that the gay individuals in the placebo group were 4.3 times more likely to contract COVID-19 than the gay individuals who received the vaccine.
 
 Given this evidence, we reject the null hypothesis in favor of the alternative. The vaccine appears to be highly effective in reducing the likelihood of COVID-19 infection among individuals who identify as gay.
 
-## Effectiveness Confidence Interval (LGBTQ)
+
 ```{r}
 effect <- gaysfish$p.value/(gaysfish$p.value +1)
 effectivenessgays = gaysfish$estimate/(gaysfish$estimate +1)*100
@@ -234,9 +237,11 @@ hi=(gaysfish$conf.int[2]/(gaysfish$conf.int[2] +1))*100
 options(digits=2)
 ```
 
+## Effectiveness Confidence Interval `r low` to `r hi` (LGBTQ)
+
 The graph above shows the effectiveness of the COVID-19 vaccine among individuals who identify as gay. An effectiveness rate above 50% indicates that the vaccine is considered effective. Based on the confidence interval displayed, we can conclude that the vaccine offers strong protection for this group against contracting COVID-19.
 
-The odds ratio, which provides a measure of the vaccine’s effectiveness, is shown above as 81, indicating a substantial level of protection. This suggests that vaccinated individuals are significantly better protected compared to those who did not receive the vaccine. The confidence interval for vaccine effectiveness in this group ranges from 71.4% to 86.7%.
+The odds ratio, which provides a measure of the vaccine’s effectiveness, is shown above as 81, indicating a substantial level of protection. This suggests that vaccinated individuals are significantly better protected compared to those who did not receive the vaccine. The confidence interval for vaccine effectiveness in this group ranges from 69.00 to 89.88%.
 
 
 
@@ -260,7 +265,7 @@ basicCC + geom_bar(stat="identity", position = "dodge")
 
 This plot focuses on participants who identified as drug users and examines the relationship between COVID-19 infection and whether they received the vaccine or a placebo.
 
-According to the bar plot, approximately 92% of drug users who received the vaccine contracted COVID-19, while only about 8% of those who received the placebo became infected. This suggests that individuals in this group were more likely to contract COVID-19 if they were vaccinated, with odds of infection being 9:1. In other words, drug users who received the vaccine were more likely to get infected than those who received the placebo.
+According to the bar plot, approximately 92% of drug users who received the vaccine contracted COVID-19, while only about 8% of those who received the placebo became infected. This suggests that individuals in this group were more likely to contract COVID-19 if they were vaccinated. In other words, drug users who received the vaccine were more likely to get infected than those who received the placebo.
 
 There are two bar plots presented. In the first, the x-axis represents infection status, whether participants were infected with COVID-19 or not, while the y-axis shows the number of individuals in each group.
 
@@ -288,11 +293,11 @@ drugfish
 
 The p-value is 0.000000000003, an extremely small number, indicating that the observed results are highly unlikely to have occurred by chance.
 
-Fisher’s Exact Test shows an odds ratio of 0.087, meaning drug users who received the vaccine were at a higher risk of contracting COVID-19 compared to those who received the placebo.
+Fisher’s Exact Test shows an odds ratio of 0.087, which is >1, meaning drug users who received the vaccine were at a higher risk of contracting COVID-19 compared to those who received the placebo.
 
-Therefore, we reject the null hypothesis in favor of the alternative. The vaccine appears to be ineffective in preventing COVID-19 among individuals who reported drug use.
+Therefore, we we fail to reject the null hypothesis. The vaccine appears to be ineffective in preventing COVID-19 among individuals who reported drug use.
 
-## Effectiveness Confidence Interval (Druggies)
+
 ```{r}
 effect <- drugfish$p.value/(drugfish$p.value +1)
 effectivenessdrug = drugfish$estimate/(drugfish$estimate +1)*100
@@ -304,22 +309,26 @@ low=(drugfish$conf.int[1]/(drugfish$conf.int[1] +1))*100
 hi=(drugfish$conf.int[2]/(drugfish$conf.int[2] +1))*100
 options(digits=2)
 ```
+
+## Effectiveness Confidence Interval `r low` to `r hi` (Druggies)
+
 Above is the data showing the effectiveness of the COVID-19 vaccine among individuals who reported drug use. An effectiveness rate above 50% typically indicates a successful vaccine. However, based on the confidence interval shown, we can conclude that the vaccine is not effective in protecting drug users from contracting COVID-19.
 
 Generally, a strong vaccine demonstrates at least 60% effectiveness. In this case, the vaccine does not perform well in preventing infection among drug users.
 
-The odds ratio offers an estimate of the vaccine’s effectiveness. For this group, the odds ratio falls below 65, with a confidence interval ranging from 2.02 to 23.1, suggesting a lack of protective benefit in this population.
+The odds ratio offers an estimate of the vaccine’s effectiveness. For this group, the odds ratio falls below 65, with a confidence interval ranging from 2.65 to 17.86, suggesting a lack of protective benefit in this population.
+
 
 
 
 # Overall Results and Conclusions
-The COVID-19 vaccine proved effective in protecting men from contracting the virus. Although the confidence interval was somewhat narrower compared to other groups,ranging from 54.7% to 72.3%, the vaccine still demonstrated reliable effectiveness. The measured effectiveness for men was r effectivenessguy.
+The COVID-19 vaccine proved effective in protecting men from contracting the virus. Although the confidence interval was somewhat narrower compared to other groups, ranging from 68.85% to 78.32%, the vaccine still demonstrated reliable effectiveness. The measured effectiveness for men was `r effectivenessguy`.
 
-The vaccine was highly successful in preventing COVID-19 among women, showing strong protection. The effectiveness rate for women was r effectivenessgal.
+The vaccine was highly successful in preventing COVID-19 among women, showing strong protection. Their confidence interval ranged from 59.8% to 69.92%. The effectiveness rate for women was `r effectivenessgal`.
 
-Among individuals who identified as gay, the vaccine offered the highest level of protection. Their confidence interval ranged from 71.4% to 86.7%, indicating substantial effectiveness. The effectiveness for this group was r effectivenessgays.
+Among individuals who identified as gay, the vaccine offered the highest level of protection. Their confidence interval ranged from 69% to 89.88%, indicating substantial effectiveness. The effectiveness for this group was `r effectivenessgays`.
 
-In contrast, the vaccine was not effective for individuals who reported drug use. Their confidence interval ranged from 2.02% to 23.1%, suggesting not only poor protection but a potentially increased risk. Drug users who received the vaccine were approximately 11 times more likely to contract COVID-19 than those in the placebo group. The effectiveness rate for drug users was r effectivenessdrug.
+In contrast, the vaccine was not effective for individuals who reported drug use. Their confidence interval ranged from 2.65% to 17.86%, suggesting not only poor protection but a potentially increased risk. Drug users who received the vaccine were approximately 11 times more likely to contract COVID-19 than those in the placebo group. The effectiveness rate for drug users was `r effectivenessdrug`.
 
 Based on these findings, the vaccine is not recommended for individuals who use drugs. However, it is recommended for males, females, and those who identify as gay, as it has shown to be effective in these populations.
 
